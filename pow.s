@@ -19,13 +19,15 @@ input:
 	pushq	%rbp			#prologue: push rbp onto stack
 	movq	%rsp, %rbp		#then copy stackpointer to rbp		
 
-	subq	$16, %rsp		#reserve stack space for variables
+	subq	$8, %rsp		#reserve stack space for variable
 
 	leaq	-8(%rbp), %rsi		#load address of stack var in rsi
 	movq	$inputstr, %rdi		#load first argument of scanf
 	call	scanf			#scan variable
 	
 	movq 	-8(%rbp), %rsi 		#copy scanned variable into rsi
+
+	subq	$8, %rsp		#reserve stack space for variable
 
 	leaq	-8(%rbp), %rcx		#load address of stack var in rcx
 	movq	$inputstr2, %rdi	#load first argument of scanf
@@ -38,7 +40,7 @@ input:
 
 loop:
 	cmpq	%r8, %rcx		#compare r8 with the exponent in rcx	
-	jle 	end			#if so, go to end
+	je 	end			#if so, go to end
 	
 	incq	%r8			#increment r8 by 1
 	mulq	%rsi			#multiply rsi by the value in rax
