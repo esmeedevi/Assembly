@@ -20,29 +20,26 @@ input:
 	movq	%rsp, %rbp		#then copy stackpointer to rbp		
 
 	subq	$8, %rsp		#reserve stack space for variable
-
 	leaq	-8(%rbp), %rsi		#load address of stack var in rsi
 	movq	$inputstr, %rdi		#load first argument of scanf
 	call	scanf			#scan variable
-	
-	movq 	-8(%rbp), %rsi 		#copy scanned variable into rsi
 
 	subq	$8, %rsp		#reserve stack space for variable
-
-	leaq	-8(%rbp), %rcx		#load address of stack var in rcx
+	leaq	-8(%rbp), %rsi		#load address of stack var in rdx
 	movq	$inputstr2, %rdi	#load first argument of scanf
 	call	scanf			#scan variable
+	
+	popq	%rdx			#pop exponent variable into rdx
+	popq	%rsi			#pop base into rsi
 
-	movq 	-8(%rbp), %rcx		#copy scanned variable into rcx
-
-	movq 	%rsi, %rax		#copy rsi into rax
-	movq	$1, %r8			#put the value 1 in r8
+	movq 	%rsi, %rax		#copy base into rax
+	movq	$0, %rcx		#put the value 0 in rcx
 
 loop:
-	cmpq	%r8, %rcx		#compare r8 with the exponent in rcx	
+	cmpq	%rcx, %rdx		#compare rcx with the exponent in rdx	
 	je 	end			#if so, go to end
 	
-	incq	%r8			#increment r8 by 1
+	incq	%rcx			#increment rcx by 1
 	mulq	%rsi			#multiply rsi by the value in rax
 
 	jmp	loop
@@ -53,7 +50,7 @@ end:
 	movq	$0, %rax		#no vector args
 	call	printf			#print
 
-	movq    %rbp, %rsp		#epilogue: move rsp to rdi
+	movq    %rbp, %rsp		#epilogue: move rbp to rap
 	popq	%rbp			#restore base pointer
 
 	ret
