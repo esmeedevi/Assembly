@@ -14,6 +14,7 @@ newlinestr:	.asciz "%ld\n"
 ##############################################################
 
 # Main input, print randomstring
+
 main:
 	movq	$0, %rax		#no vector args
 	movq    $randomstr, %rdi	#move randomstr into rdi
@@ -21,9 +22,10 @@ main:
 	
 	call 	in
 	movq	%rsi, %rax
-	call	factorial
 
+	call	factorial
 	mov	$0, %rdi
+
 	call	exit
 	
 
@@ -40,6 +42,7 @@ in:
 	movq 	-8(%rbp), %rsi		#move value of var to rbx
 	movq    %rbp, %rsp		#epilogue: move rbp to rsp
 	popq	%rbp			#restore base pointer
+	ret
 	
 
 factorial:
