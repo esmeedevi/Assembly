@@ -1,11 +1,10 @@
-
 #Program name: Assignment 4
 #Description: Factorial
 #Namen en studentnummers: Soumaya Azaouagh 4334604 Esmee Hildebrand 4353765
 #Datum: 12-10-2015
 
 .data
-randomstr:	.asciz "Assignment 4: inout\n\nGive me a number: \n"
+randomstr:	.asciz "Assignment 4: Factorial\n\nGive me a number: \n"
 inputstr:	.asciz "%ld" 
 newlinestr:	.asciz "%ld\n"
 
@@ -21,7 +20,10 @@ main:
 	call	printf			#print
 	
 	call 	in
+	movq	%rsi, %rax
 	call	factorial
+
+	mov	$0, %rdi
 	call	exit
 	
 
@@ -36,17 +38,28 @@ in:
 	call	scanf			#scan
 
 	movq 	-8(%rbp), %rsi		#move value of var to rbx
-	movq	$1, %rax		#copy 1 to rax
+	movq    %rbp, %rsp		#epilogue: move rbp to rsp
+	popq	%rbp			#restore base pointer
+	
 
 factorial:
-	cmpq    $0, %rsi 		#compare rsi and 0
-	je      out			#if equal, jump to out
+	pushq	%rbp			#prologue: push rbp onto stack
+	movq	%rsp, %rbp		#then move stackpointer to rbp	
 
-	decq	%rsi
+	cmpq    $0, %rsi 		#compare rsi and 0
+	je      base			#if equal, jump to out
+
 	pushq	%rsi
+	decq	%rsi
 	call    factorial		#call function
-	imulq   %rsi			#rax = rax * rsi
 	popq	%rsi
+	imulq   %rsi			#rax = rax * rsi
+	
+	jmp 	out
+
+
+base:
+	movq	$1, %rax		#copy 1 to rax
 
 out:
 	movq	%rax, %rsi
