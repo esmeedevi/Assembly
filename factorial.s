@@ -20,18 +20,15 @@ main:
 	movq    $randomstr, %rdi	#move randomstr into rdi
 	call	printf			#print
 	
-	call 	in			
-	movq	%rsi, %rdi
-
-	call	factorial
+	call 	in			#get a number as input		
+	call	factorial		#calculate factorial of input
 
 	movq	%rax, %rsi
 	movq	$newlinestr, %rdi	#store newlinestr into rdi
 	movq	$0, %rax		#no vector args
 	call	printf			#print
 	
-	mov	$0, %rdi
-	
+	mov	$0, %rdi		#close program 
 	call	exit
 	
 
@@ -45,7 +42,7 @@ in:
 	movq	$inputstr, %rdi		#load first argument of scanf
 	call	scanf			#scan
 
-	movq 	-8(%rbp), %rsi		#move value of var to rbx
+	movq 	-8(%rbp), %rdi		#move value of var to rdi
 
 	movq    %rbp, %rsp		#epilogue: move rbp to rsp
 	popq	%rbp			#restore base pointer
@@ -56,17 +53,17 @@ factorial:
 	pushq	%rbp			#prologue: push rbp onto stack
 	movq	%rsp, %rbp		#then move stackpointer to rbp	
 
-	cmpq    $0, %rdi 		#compare rsi and 0
+	cmpq    $0, %rdi 		#compare rdi and 0
 	je      nul			#if equal, jump to nul
 
 	
-	pushq	%rdi
-	decq	%rdi
+	pushq	%rdi			#push rdi onto stack
+	decq	%rdi			#decrement rdi
 
 	call    factorial		#call function
 	
-	popq	%rdi
-	imulq   %rdi			#rax = rax * rsi
+	popq	%rdi			#pop rdi from stack
+	imulq   %rdi			#rax = rax * rdi
 	
 	movq    %rbp, %rsp		#epilogue: move rbp to rsp
 	popq	%rbp			#restore base pointer
@@ -80,4 +77,3 @@ nul:
 	popq	%rbp			#restore base pointer
 	
 	ret
-
