@@ -1,10 +1,11 @@
-#Program name: Assignment 2
-#Description: subroutines and I/O
+
+#Program name: Assignment 4
+#Description: Factorial
 #Namen en studentnummers: Soumaya Azaouagh 4334604 Esmee Hildebrand 4353765
-#Datum: 28-09-2015
+#Datum: 12-10-2015
 
 .data
-randomstr:	.asciz "Assignment 2: inout\n\nGive me a number: \n"
+randomstr:	.asciz "Assignment 4: inout\n\nGive me a number: \n"
 inputstr:	.asciz "%ld" 
 newlinestr:	.asciz "%ld\n"
 
@@ -34,11 +35,11 @@ in:
 	movq	$inputstr, %rdi		#load first argument of scanf
 	call	scanf			#scan
 
-	movq	-8(%rbp), %rsi		#move value of var to rbx
+	movq 	-8(%rbp), %rsi		#move value of var to rbx
 	movq	$1, %rax		#copy 1 to rax
 
 factorial:
-	cmp    %rsi, $0		#compare rsi and 0
+	cmpq    $0, %rsi 		#compare rsi and 0
 	je      out			#if equal, jump to out
 
 	decq	%rsi
