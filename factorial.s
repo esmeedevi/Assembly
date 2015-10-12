@@ -20,12 +20,18 @@ main:
 	movq    $randomstr, %rdi	#move randomstr into rdi
 	call	printf			#print
 	
-	call 	in
-	movq	%rsi, %rax
+	call 	in			
+	movq	%rsi, %rdi
 
 	call	factorial
-	mov	$0, %rdi
 
+	movq	%rax, %rsi
+	movq	$newlinestr, %rdi	#store newlinestr into rdi
+	movq	$0, %rax		#no vector args
+	call	printf			#print
+	
+	mov	$0, %rdi
+	
 	call	exit
 	
 
@@ -40,6 +46,7 @@ in:
 	call	scanf			#scan
 
 	movq 	-8(%rbp), %rsi		#move value of var to rbx
+
 	movq    %rbp, %rsp		#epilogue: move rbp to rsp
 	popq	%rbp			#restore base pointer
 	ret
@@ -49,28 +56,28 @@ factorial:
 	pushq	%rbp			#prologue: push rbp onto stack
 	movq	%rsp, %rbp		#then move stackpointer to rbp	
 
-	cmpq    $0, %rsi 		#compare rsi and 0
-	je      base			#if equal, jump to out
+	cmpq    $0, %rdi 		#compare rsi and 0
+	je      nul			#if equal, jump to nul
 
-	pushq	%rsi
-	decq	%rsi
-	call    factorial		#call function
-	popq	%rsi
-	imulq   %rsi			#rax = rax * rsi
 	
-	jmp 	out
+	pushq	%rdi
+	decq	%rdi
 
-
-base:
-	movq	$1, %rax		#copy 1 to rax
-
-out:
-	movq	%rax, %rsi
-	movq	$newlinestr, %rdi	#store newlinestr into rdi
-	movq	$0, %rax		#no vector args
-	call	printf			#print
+	call    factorial		#call function
+	
+	popq	%rdi
+	imulq   %rdi			#rax = rax * rsi
 	
 	movq    %rbp, %rsp		#epilogue: move rbp to rsp
 	popq	%rbp			#restore base pointer
+	
+	ret
 
-	ret				#return from subroutine
+
+nul:
+	movq	$1, %rax		#copy 1 to rax
+	movq    %rbp, %rsp		#epilogue: move rbp to rsp
+	popq	%rbp			#restore base pointer
+	
+	ret
+
